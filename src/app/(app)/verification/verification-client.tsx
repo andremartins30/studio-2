@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,15 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge as UiBadge, CheckCircle, XCircle, RefreshCw, HelpCircle, User, Lightbulb, Camera, ChevronRight, UserCheck, UserSearch } from "lucide-react";
+import { Badge as UiBadge, CheckCircle, XCircle, RefreshCw, HelpCircle, Lightbulb, Camera, UserCheck, UserSearch } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { verifyIdentity, VerifyIdentityOutput } from "@/ai/flows/verify-identity";
 import { suggestIdentity, SuggestIdentityOutput } from "@/ai/flows/suggest-identity";
-
-// Um SVG placeholder em base64 para a foto para evitar requisições de rede
-const PLACEHOLDER_PHOTO_DATA_URI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2EwYTBiMiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE4IDIwYTYgNiAwIDAgMC0xMiAwIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMCIgcj0iNCIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PC9zdmc+";
 
 export function VerificationClient() {
   const { toast } = useToast();
@@ -25,23 +21,88 @@ export function VerificationClient() {
   const [verifyEmployeeId, setVerifyEmployeeId] = useState("102");
   const [isVerifying, setIsVerifying] = useState(false);
   const [verifyResult, setVerifyResult] = useState<VerifyIdentityOutput | null>(null);
-
+  const [verifyImageSrc, setVerifyImageSrc] = useState<string | null>(null);
+  
   // State para o fluxo de Sugestão
   const [suggestEmployeeId, setSuggestEmployeeId] = useState("512");
   const [suggestName, setSuggestName] = useState("Carlos Pereira");
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [suggestResult, setSuggestResult] = useState<SuggestIdentityOutput | null>(null);
+  const [suggestImageSrc, setSuggestImageSrc] = useState<string | null>(null);
+
+  // State da Câmera
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [isLive, setIsLive] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const getCameraPermission = async () => {
+      if (!isLive) return;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Acesso à câmera negado',
+          description: 'Por favor, habilite o acesso à câmera nas configurações do seu navegador.',
+        });
+      }
+    };
+
+    getCameraPermission();
+
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+    }
+  }, [isLive, toast]);
+
+  const captureImage = (setter: React.Dispatch<React.SetStateAction<string | null>>) => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        const dataUrl = canvas.toDataURL('image/png');
+        setter(dataUrl);
+        setIsLive(false);
+      }
+    }
+  };
+
+  const retakeImage = (setter: React.Dispatch<React.SetStateAction<string | null>>) => {
+      setter(null);
+      setIsLive(true);
+  }
 
   const handleVerify = async () => {
     if (!verifyEmployeeId) {
       toast({ variant: "destructive", title: "Matrícula do funcionário é obrigatória" });
       return;
     }
+    if (!verifyImageSrc) {
+        toast({ variant: "destructive", title: "Imagem é obrigatória", description: "Capture uma imagem para verificação." });
+        return;
+    }
+
     setIsVerifying(true);
     setVerifyResult(null);
     try {
       const result = await verifyIdentity({
-        photoDataUri: PLACEHOLDER_PHOTO_DATA_URI,
+        photoDataUri: verifyImageSrc,
         employeeId: verifyEmployeeId,
       });
       setVerifyResult(result);
@@ -53,15 +114,16 @@ export function VerificationClient() {
   };
 
   const handleSuggest = async () => {
-    if (!suggestEmployeeId || !suggestName) {
-      toast({ variant: "destructive", title: "Matrícula e Nome são obrigatórios" });
-      return;
+    if (!suggestImageSrc) {
+        toast({ variant: "destructive", title: "Imagem é obrigatória", description: "Capture uma imagem para obter sugestões." });
+        return;
     }
+
     setIsSuggesting(true);
     setSuggestResult(null);
     try {
       const result = await suggestIdentity({
-        photoDataUri: PLACEHOLDER_PHOTO_DATA_URI,
+        photoDataUri: suggestImageSrc,
         employeeId: suggestEmployeeId,
         name: suggestName,
       });
@@ -73,8 +135,49 @@ export function VerificationClient() {
     }
   };
 
+  const renderCameraView = (imageSrc: string | null, onCapture: () => void, onRetake: () => void, disabled: boolean) => (
+    <div className="space-y-4">
+      <div className="w-full aspect-square bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
+        {imageSrc ? (
+          <Image src={imageSrc} alt="Foto capturada" layout="fill" objectFit="cover" data-ai-hint="person portrait" />
+        ) : isLive ? (
+          <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+        ) : null }
+        
+        { hasCameraPermission === false && (
+            <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center p-4">
+                 <Alert variant="destructive">
+                  <AlertTitle>Acesso à Câmera Negado</AlertTitle>
+                  <AlertDescription>
+                    Por favor, habilite o acesso à câmera para usar esta funcionalidade.
+                  </AlertDescription>
+                </Alert>
+            </div>
+        )}
+
+        <div className="absolute top-2 right-2 flex items-center gap-2">
+            <UiBadge variant="outline">{isLive && !imageSrc ? 'Ao Vivo' : 'Capturada'}</UiBadge>
+        </div>
+      </div>
+      <canvas ref={canvasRef} className="hidden"></canvas>
+      {imageSrc ? (
+         <Button onClick={onRetake} className="w-full" variant="secondary" disabled={disabled}>
+            <Camera className="mr-2 h-4 w-4" />
+            Tirar Outra Foto
+        </Button>
+      ) : (
+        <Button onClick={onCapture} className="w-full" variant="secondary" disabled={hasCameraPermission !== true || disabled}>
+            <Camera className="mr-2 h-4 w-4" />
+            Capturar para Verificar
+        </Button>
+      )}
+    </div>
+  );
+
+
   return (
-    <Tabs defaultValue="verify" className="w-full">
+    <>
+    <Tabs defaultValue="verify" className="w-full" onValueChange={() => { setVerifyImageSrc(null); setSuggestImageSrc(null); setIsLive(true); }}>
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="verify"><UserCheck className="mr-2 h-4 w-4"/>Verificar Identidade</TabsTrigger>
         <TabsTrigger value="suggest"><UserSearch className="mr-2 h-4 w-4"/>Sugerir Identidade</TabsTrigger>
@@ -87,20 +190,14 @@ export function VerificationClient() {
             <CardDescription>Verifique a identidade de um funcionário em relação aos seus dados biométricos registrados.</CardDescription>
           </CardHeader>
           <CardContent className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-               <div className="w-full aspect-square bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
-                <Image src={PLACEHOLDER_PHOTO_DATA_URI} alt="Foto de verificação" layout="fill" objectFit="contain" className="p-8" data-ai-hint="person avatar" />
-                 <div className="absolute top-2 right-2 flex items-center gap-2">
-                  <UiBadge variant="outline">Ao Vivo</UiBadge>
-                  <Button size="icon" variant="secondary" className="h-8 w-8"><Camera className="h-4 w-4"/></Button>
-                 </div>
-              </div>
+            {renderCameraView(verifyImageSrc, () => captureImage(setVerifyImageSrc), () => retakeImage(setVerifyImageSrc), isVerifying)}
+            
+            <div className="flex flex-col space-y-4">
               <div>
                 <Label htmlFor="verify-employee-id">Matrícula</Label>
-                <Input id="verify-employee-id" value={verifyEmployeeId} onChange={(e) => setVerifyEmployeeId(e.target.value)} placeholder="Digite a matrícula para verificar" />
+                <Input id="verify-employee-id" value={verifyEmployeeId} onChange={(e) => setVerifyEmployeeId(e.target.value)} placeholder="Digite a matrícula para verificar" disabled={isVerifying} />
               </div>
-            </div>
-            <div className="flex flex-col">
+
               <div className="flex-grow space-y-4">
                 <Label>Resultado da Verificação</Label>
                 <div className="border rounded-lg p-4 min-h-[200px] bg-muted/50 flex items-center justify-center">
@@ -155,7 +252,7 @@ export function VerificationClient() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button onClick={handleVerify} disabled={isVerifying} className="w-full bg-accent hover:bg-accent/90">
+            <Button onClick={handleVerify} disabled={isVerifying || !verifyImageSrc} className="w-full bg-accent hover:bg-accent/90">
               {isVerifying && <RefreshCw className="mr-2 h-4 w-4 animate-spin" />}
               Verificar Identidade
             </Button>
@@ -168,28 +265,21 @@ export function VerificationClient() {
           <CardHeader>
             <CardTitle>Sugerir Possíveis Identidades</CardTitle>
             <CardDescription>Se uma pessoa for desconhecida, esta ferramenta pode sugerir correspondências do banco de dados.</CardDescription>
-          </Header>
+          </CardHeader>
           <CardContent className="grid md:grid-cols-2 gap-6">
-             <div className="space-y-4">
-               <div className="w-full aspect-square bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
-                <Image src={PLACEHOLDER_PHOTO_DATA_URI} alt="Foto para sugestão" layout="fill" objectFit="contain" className="p-8" data-ai-hint="person avatar"/>
-                <div className="absolute top-2 right-2 flex items-center gap-2">
-                  <UiBadge variant="outline">Foto</UiBadge>
-                   <Button size="icon" variant="secondary" className="h-8 w-8"><Camera className="h-4 w-4"/></Button>
-                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="suggest-name">Nome Conhecido (Opcional)</Label>
-                  <Input id="suggest-name" value={suggestName} onChange={(e) => setSuggestName(e.target.value)} placeholder="ex: Carlos P."/>
+             {renderCameraView(suggestImageSrc, () => captureImage(setSuggestImageSrc), () => retakeImage(setSuggestImageSrc), isSuggesting)}
+
+             <div className="flex flex-col space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                    <Label htmlFor="suggest-name">Nome Conhecido (Opcional)</Label>
+                    <Input id="suggest-name" value={suggestName} onChange={(e) => setSuggestName(e.target.value)} placeholder="ex: Carlos P." disabled={isSuggesting} />
+                    </div>
+                    <div>
+                    <Label htmlFor="suggest-employee-id">Matrícula (Opcional)</Label>
+                    <Input id="suggest-employee-id" value={suggestEmployeeId} onChange={(e) => setSuggestEmployeeId(e.target.value)} placeholder="ex: 512" disabled={isSuggesting}/>
+                    </div>
                 </div>
-                 <div>
-                  <Label htmlFor="suggest-employee-id">Matrícula (Opcional)</Label>
-                  <Input id="suggest-employee-id" value={suggestEmployeeId} onChange={(e) => setSuggestEmployeeId(e.target.value)} placeholder="ex: 512"/>
-                </div>
-              </div>
-            </div>
-             <div className="flex flex-col">
               <div className="flex-grow space-y-4">
                 <Label>Identidades Sugeridas</Label>
                 <div className="border rounded-lg p-4 min-h-[200px] bg-muted/50 flex items-center justify-center">
@@ -226,7 +316,7 @@ export function VerificationClient() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button onClick={handleSuggest} disabled={isSuggesting} className="w-full bg-accent hover:bg-accent/90">
+            <Button onClick={handleSuggest} disabled={isSuggesting || !suggestImageSrc} className="w-full bg-accent hover:bg-accent/90">
               {isSuggesting && <RefreshCw className="mr-2 h-4 w-4 animate-spin" />}
               Obter Sugestões
             </Button>
@@ -234,5 +324,6 @@ export function VerificationClient() {
         </Card>
       </TabsContent>
     </Tabs>
+    </>
   );
 }

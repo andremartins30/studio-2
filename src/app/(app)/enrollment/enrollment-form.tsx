@@ -1,31 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Camera, User, Badge, RefreshCw } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Camera, User, Badge as BadgeIcon, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function EnrollmentForm() {
   const [employeeName, setEmployeeName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [isCapturing, setIsCapturing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const { toast } = useToast();
 
+  useEffect(() => {
+    const getCameraPermission = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description: 'Please enable camera permissions in your browser settings to use this app.',
+        });
+      }
+    };
+
+    getCameraPermission();
+
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+    }
+  }, [toast]);
+
   const handleCapture = () => {
-    setIsCapturing(true);
-    setTimeout(() => {
-      // Simula captura da câmera
-      const timestamp = new Date().getTime();
-      setImageSrc(`https://placehold.co/400x400.png?t=${timestamp}`);
-      setIsCapturing(false);
-    }, 1000);
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        const dataUrl = canvas.toDataURL('image/png');
+        setImageSrc(dataUrl);
+      }
+    }
   };
+
+  const handleRetake = () => {
+    setImageSrc(null);
+  }
 
   const handleRegister = () => {
     if (!employeeName || !employeeId || !imageSrc) {
@@ -68,7 +112,7 @@ export function EnrollmentForm() {
         <div className="space-y-2">
           <Label htmlFor="employee-id">Matrícula</Label>
           <div className="relative">
-            <Badge className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <BadgeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input id="employee-id" placeholder="ex: 301" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="pl-10" />
           </div>
         </div>
@@ -78,25 +122,35 @@ export function EnrollmentForm() {
             {imageSrc ? (
               <Image src={imageSrc} alt="Imagem capturada" layout="fill" objectFit="cover" data-ai-hint="person portrait" />
             ) : (
-              <div className="text-center text-muted-foreground">
-                <Camera className="mx-auto h-12 w-12" />
-                <p>A prévia da imagem aparecerá aqui</p>
-              </div>
+               <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
             )}
-            {isCapturing && (
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <RefreshCw className="h-8 w-8 text-white animate-spin" />
+             {hasCameraPermission === false && (
+                <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center p-4">
+                     <Alert variant="destructive">
+                      <AlertTitle>Acesso à Câmera Negado</AlertTitle>
+                      <AlertDescription>
+                        Por favor, habilite o acesso à câmera nas configurações do seu navegador para continuar.
+                      </AlertDescription>
+                    </Alert>
                 </div>
             )}
           </div>
-          <Button onClick={handleCapture} disabled={isCapturing} className="w-full" variant="secondary">
-            <Camera className="mr-2 h-4 w-4" />
-            {isCapturing ? "Capturando..." : imageSrc ? "Tirar Outra Foto" : "Capturar Foto"}
-          </Button>
+            <canvas ref={canvasRef} className="hidden"></canvas>
+            {imageSrc ? (
+                 <Button onClick={handleRetake} className="w-full" variant="secondary">
+                    <Camera className="mr-2 h-4 w-4" />
+                    Tirar Outra Foto
+                </Button>
+            ) : (
+                <Button onClick={handleCapture} disabled={hasCameraPermission !== true} className="w-full" variant="secondary">
+                    <Camera className="mr-2 h-4 w-4" />
+                    Capturar Foto
+                </Button>
+            )}
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleRegister} disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">
+        <Button onClick={handleRegister} disabled={isLoading || !imageSrc} className="w-full bg-accent hover:bg-accent/90">
             {isLoading && <RefreshCw className="mr-2 h-4 w-4 animate-spin" />}
             Cadastrar Usuário
         </Button>
