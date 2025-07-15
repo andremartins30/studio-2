@@ -1,21 +1,12 @@
+'use client';
+
 import { PageHeader } from "@/components/page-header";
-import { AppLayout } from "@/components/app-layout";
+import { ProtectedPage } from "@/components/protected-page";
 import { VerificationClient } from "./verification-client";
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
-export default async function VerificationPage() {
-    // Verifica se o usuário está autenticado
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get('session_token');
-
-    if (!sessionToken) {
-        // Usuário não autenticado, redireciona para login
-        redirect('/login');
-    }
-
+export default function VerificationPage() {
     return (
-        <AppLayout>
+        <ProtectedPage>
             <div className="flex flex-col gap-8">
                 <PageHeader
                     title="Verificação de Identidade"
@@ -23,6 +14,6 @@ export default async function VerificationPage() {
                 />
                 <VerificationClient />
             </div>
-        </AppLayout>
+        </ProtectedPage>
     );
 }

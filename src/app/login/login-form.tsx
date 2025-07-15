@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,30 +15,38 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShieldCheck, Mail, KeyRound, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { login } from './actions';
+import { useAuth } from '@/contexts/auth-context';
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { login } = useAuth();
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const result = await login(formData);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-    if (result?.error) {
+    try {
+      await login(email, password);
+      toast({
+        title: 'Login realizado com sucesso!',
+        description: 'Redirecionando para o painel...',
+      });
+      router.push('/dashboard');
+    } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Falha no login',
-        description: result.error,
+        description: error instanceof Error ? error.message : 'Credenciais inválidas',
       });
+    } finally {
+      setIsLoading(false);
     }
-
-    // O redirecionamento em caso de sucesso é tratado pela Server Action
-    // Se houver um erro, o loading é desativado para permitir nova tentativa.
-    setIsLoading(false);
   };
 
   return (

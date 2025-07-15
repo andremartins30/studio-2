@@ -1,4 +1,7 @@
+'use client';
+
 import { PageHeader } from "@/components/page-header";
+import { ProtectedPage } from "@/components/protected-page";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Mail, Building } from "lucide-react";
@@ -28,52 +31,54 @@ const faqs = [
 
 export default function HelpPage() {
   return (
-    <div className="flex flex-col gap-8">
-      <PageHeader
-        title="Ajuda & Suporte"
-        description="Encontre respostas para perguntas comuns e entre em contato com nossa equipe de suporte."
-      />
-      <div className="grid md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
+    <ProtectedPage>
+      <div className="flex flex-col gap-8">
+        <PageHeader
+          title="Ajuda & Suporte"
+          description="Encontre respostas para perguntas comuns e entre em contato com nossa equipe de suporte."
+        />
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2">
             <h2 className="text-2xl font-semibold mb-4">Perguntas Frequentes</h2>
             <Accordion type="single" collapsible className="w-full">
-                {faqs.map((faq, index) => (
-                    <AccordionItem value={`item-${index}`} key={index}>
-                        <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-                        <AccordionContent>
-                            {faq.answer}
-                        </AccordionContent>
-                    </AccordionItem>
-                ))}
+              {faqs.map((faq, index) => (
+                <AccordionItem value={`item-${index}`} key={index}>
+                  <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+                  <AccordionContent>
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
-        </div>
-        <div>
-             <h2 className="text-2xl font-semibold mb-4">Contato do Suporte</h2>
+          </div>
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Contato do Suporte</h2>
             <Card>
-                <CardHeader>
-                    <CardTitle>Suporte Técnico</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex items-center gap-4">
-                        <Phone className="h-5 w-5 text-accent" />
-                        <span className="text-muted-foreground">+55 (11) 98765-4321</span>
-                    </div>
-                     <div className="flex items-center gap-4">
-                        <Mail className="h-5 w-5 text-accent" />
-                        <span className="text-muted-foreground">suporte@epicontrol.com</span>
-                    </div>
-                     <div className="flex items-start gap-4">
-                        <Building className="h-5 w-5 text-accent mt-1" />
-                        <div className="text-muted-foreground">
-                            <p>EPI Control HQ</p>
-                            <p>Rua da Tecnologia, 123</p>
-                             <p>São Paulo, SP, Brasil</p>
-                        </div>
-                    </div>
-                </CardContent>
+              <CardHeader>
+                <CardTitle>Suporte Técnico</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <Phone className="h-5 w-5 text-accent" />
+                  <span className="text-muted-foreground">+55 (11) 98765-4321</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Mail className="h-5 w-5 text-accent" />
+                  <span className="text-muted-foreground">suporte@epicontrol.com</span>
+                </div>
+                <div className="flex items-start gap-4">
+                  <Building className="h-5 w-5 text-accent mt-1" />
+                  <div className="text-muted-foreground">
+                    <p>EPI Control HQ</p>
+                    <p>Rua da Tecnologia, 123</p>
+                    <p>São Paulo, SP, Brasil</p>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </ProtectedPage>
   );
 }

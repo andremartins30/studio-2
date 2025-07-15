@@ -1,11 +1,11 @@
+'use client';
+
 import { PageHeader } from "@/components/page-header";
-import { AppLayout } from "@/components/app-layout";
+import { ProtectedPage } from "@/components/protected-page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Users, Package, ScanFace, Activity } from "lucide-react";
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 const summaryData = [
     { title: "Total de Usuários", value: "1.254", icon: Users, change: "+12% do último mês" },
@@ -22,18 +22,9 @@ const recentActivity = [
     { id: "TXN738", employee: "Lucas Martins (Matrícula: 431)", action: "Devolvido", equipment: "Colete de Alta Visibilidade", status: "Verificado", date: "2024-07-28 17:30" },
 ];
 
-export default async function DashboardPage() {
-    // Verifica se o usuário está autenticado
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get('session_token');
-
-    if (!sessionToken) {
-        // Usuário não autenticado, redireciona para login
-        redirect('/login');
-    }
-
+export default function DashboardPage() {
     return (
-        <AppLayout>
+        <ProtectedPage>
             <div className="flex flex-col gap-8">
                 <PageHeader title="Painel de Controle" description="Bem-vindo à Central de Controle de EPI. Aqui está um resumo das operações atuais." />
 
@@ -88,6 +79,6 @@ export default async function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
-        </AppLayout>
+        </ProtectedPage>
     );
 }

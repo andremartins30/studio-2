@@ -1,4 +1,7 @@
+'use client';
+
 import { PageHeader } from "@/components/page-header";
+import { ProtectedPage } from "@/components/protected-page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +14,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 
 const historyData = [
@@ -26,82 +29,83 @@ const historyData = [
 ];
 
 function ConfirmationBadge({ status }: { status: string }) {
-    let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'secondary';
-    if (status === 'Verificado') variant = 'default';
-    if (status === 'Falhou') variant = 'destructive';
-    if (status === 'Liberação Manual') variant = 'outline';
-    
-    const colorClass = status === 'Verificado' ? 'bg-green-600' : '';
+  let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'secondary';
+  if (status === 'Verificado') variant = 'default';
+  if (status === 'Falhou') variant = 'destructive';
+  if (status === 'Liberação Manual') variant = 'outline';
 
-    return <Badge variant={variant} className={colorClass}>{status}</Badge>;
+  const colorClass = status === 'Verificado' ? 'bg-green-600' : '';
+
+  return <Badge variant={variant} className={colorClass}>{status}</Badge>;
 }
-
 
 export default function HistoryPage() {
   return (
-    <div className="flex flex-col gap-8">
-      <PageHeader
-        title="Histórico de Transações"
-        description="Veja um registro completo de transações de equipamentos e status de confirmação biométrica."
-      />
-      
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <CardTitle>Todas as Transações</CardTitle>
-            <div className="flex w-full md:w-auto items-center gap-2">
-              <div className="relative flex-1 md:flex-initial">
-                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                 <Input placeholder="Buscar por funcionário, equipamento..." className="pl-8" />
+    <ProtectedPage>
+      <div className="flex flex-col gap-8">
+        <PageHeader
+          title="Histórico de Transações"
+          description="Veja um registro completo de transações de equipamentos e status de confirmação biométrica."
+        />
+
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <CardTitle>Todas as Transações</CardTitle>
+              <div className="flex w-full md:w-auto items-center gap-2">
+                <div className="relative flex-1 md:flex-initial">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Buscar por funcionário, equipamento..." className="pl-8" />
+                </div>
+                <Select>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Filtrar por ação" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as Ações</SelectItem>
+                    <SelectItem value="issued">Entregues</SelectItem>
+                    <SelectItem value="returned">Devolvidos</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="outline">
+                  <FileDown className="mr-2 h-4 w-4" />
+                  Exportar
+                </Button>
               </div>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Filtrar por ação" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as Ações</SelectItem>
-                  <SelectItem value="issued">Entregues</SelectItem>
-                  <SelectItem value="returned">Devolvidos</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline">
-                <FileDown className="mr-2 h-4 w-4"/>
-                Exportar
-              </Button>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID da Transação</TableHead>
-                <TableHead>Funcionário</TableHead>
-                <TableHead>Ação</TableHead>
-                <TableHead>Equipamento</TableHead>
-                <TableHead>Confirmação</TableHead>
-                <TableHead className="text-right">Data e Hora</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {historyData.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-mono">{item.id}</TableCell>
-                  <TableCell className="font-medium">{item.employee}</TableCell>
-                  <TableCell>
-                     <Badge variant={item.action === 'Entregue' ? 'secondary' : 'outline'}>{item.action}</Badge>
-                  </TableCell>
-                  <TableCell>{item.equipment}</TableCell>
-                  <TableCell>
-                    <ConfirmationBadge status={item.confirmation} />
-                  </TableCell>
-                  <TableCell className="text-right">{item.date}</TableCell>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID da Transação</TableHead>
+                  <TableHead>Funcionário</TableHead>
+                  <TableHead>Ação</TableHead>
+                  <TableHead>Equipamento</TableHead>
+                  <TableHead>Confirmação</TableHead>
+                  <TableHead className="text-right">Data e Hora</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
+              </TableHeader>
+              <TableBody>
+                {historyData.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-mono">{item.id}</TableCell>
+                    <TableCell className="font-medium">{item.employee}</TableCell>
+                    <TableCell>
+                      <Badge variant={item.action === 'Entregue' ? 'secondary' : 'outline'}>{item.action}</Badge>
+                    </TableCell>
+                    <TableCell>{item.equipment}</TableCell>
+                    <TableCell>
+                      <ConfirmationBadge status={item.confirmation} />
+                    </TableCell>
+                    <TableCell className="text-right">{item.date}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    </ProtectedPage>
   );
 }
