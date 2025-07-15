@@ -14,43 +14,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShieldCheck, Mail, KeyRound, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { login } from './actions';
 
 export function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast({
-        variant: 'destructive',
-        title: 'Campos obrigatórios',
-        description: 'Por favor, preencha o email e a senha.',
-      });
-      return;
-    }
     setIsLoading(true);
 
-    // Simula uma chamada de API para login
-    setTimeout(() => {
-      setIsLoading(false);
-      if (email === 'admin@epicontrol.com' && password === 'password') {
-        toast({
-          title: 'Login bem-sucedido',
-          description: 'Redirecionando para o painel...',
-        });
-        // Em um app real, você redirecionaria o usuário
-        window.location.href = '/';
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Falha no login',
-          description: 'Email ou senha incorretos.',
-        });
-      }
-    }, 1500);
+    const formData = new FormData(e.currentTarget);
+    const result = await login(formData);
+
+    if (result?.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Falha no login',
+        description: result.error,
+      });
+    }
+    
+    // O redirecionamento em caso de sucesso é tratado pela Server Action
+    // Se houver um erro, o loading é desativado para permitir nova tentativa.
+    setIsLoading(false);
   };
 
   return (
@@ -71,10 +58,10 @@ export function LoginForm() {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                     id="email"
+                    name="email"
                     type="email"
-                    placeholder="seu@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@epicontrol.com"
+                    defaultValue="admin@epicontrol.com"
                     required
                     className="pl-10"
                 />
@@ -88,9 +75,9 @@ export function LoginForm() {
                  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
                     id="password" 
-                    type="password" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    name="password"
+                    type="password"
+                    defaultValue="password"
                     required 
                     className="pl-10"
                 />

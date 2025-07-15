@@ -23,9 +23,11 @@ import {
   History,
   Settings,
   HelpCircle,
+  LogOut,
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { logout } from '@/app/login/actions';
 
 const navItems = [
   { href: '/', label: 'Painel de Controle', icon: LayoutDashboard },
@@ -97,15 +99,23 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center gap-3">
-             <Avatar className="h-9 w-9">
-              <AvatarImage src="https://placehold.co/100x100.png" alt="@shadcn" data-ai-hint="user avatar" />
-              <AvatarFallback>AD</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col text-sm">
-                <span className="font-medium text-sidebar-foreground">Usuário Admin</span>
-                <span className="text-sidebar-foreground/70">admin@epicontrol.com</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src="https://placehold.co/100x100.png" alt="@shadcn" data-ai-hint="user avatar" />
+                <AvatarFallback>AD</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col text-sm">
+                  <span className="font-medium text-sidebar-foreground">Usuário Admin</span>
+                  <span className="text-sidebar-foreground/70">admin@epicontrol.com</span>
+              </div>
             </div>
+            <form action={logout}>
+              <Button variant="ghost" size="icon" className="text-sidebar-foreground/70 hover:text-sidebar-foreground h-8 w-8" type="submit">
+                <LogOut className="w-4 h-4" />
+                <span className="sr-only">Sair</span>
+              </Button>
+            </form>
           </div>
         </SidebarFooter>
       </Sidebar>
