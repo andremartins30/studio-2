@@ -30,7 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { logout } from '@/app/login/actions';
 
 const navItems = [
-  { href: '/', label: 'Painel de Controle', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Painel de Controle', icon: LayoutDashboard },
   { href: '/enrollment', label: 'Cadastro Biométrico', icon: UserPlus },
   { href: '/verification', label: 'Verificação de Identidade', icon: ScanFace },
   { href: '/materials', label: 'Gestão de Materiais', icon: Construction },
@@ -38,13 +38,13 @@ const navItems = [
 ];
 
 const secondaryNavItems = [
-    { href: '/settings', label: 'Configuração do Sistema', icon: Settings },
-    { href: '/help', label: 'Ajuda & Suporte', icon: HelpCircle },
+  { href: '/settings', label: 'Configuração do Sistema', icon: Settings },
+  { href: '/help', label: 'Ajuda & Suporte', icon: HelpCircle },
 ]
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -81,7 +81,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
 
           <SidebarMenu className="mt-auto">
-             {secondaryNavItems.map((item) => (
+            {secondaryNavItems.map((item) => (
               <SidebarMenuItem key={item.label}>
                 <SidebarMenuButton
                   asChild
@@ -106,8 +106,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <AvatarFallback>AD</AvatarFallback>
               </Avatar>
               <div className="flex flex-col text-sm">
-                  <span className="font-medium text-sidebar-foreground">Usuário Admin</span>
-                  <span className="text-sidebar-foreground/70">admin@epicontrol.com</span>
+                <span className="font-medium text-sidebar-foreground">Usuário Admin</span>
+                <span className="text-sidebar-foreground/70">admin@epicontrol.com</span>
               </div>
             </div>
             <form action={logout}>
@@ -121,13 +121,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
-           <SidebarTrigger className="md:hidden" />
-           <div className="flex-1">
-             <h1 className="text-lg font-semibold tracking-tight">Central de Controle de EPI</h1>
-           </div>
+          <SidebarTrigger className="md:hidden" />
+          <div className="flex-1">
+            <h1 className="text-lg font-semibold tracking-tight">Central de Controle de EPI</h1>
+          </div>
         </header>
         <main className="flex-1 p-6 md:p-8">
-            {children}
+          {children}
         </main>
       </SidebarInset>
     </SidebarProvider>

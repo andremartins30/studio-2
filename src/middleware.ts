@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server'
 // A lógica de "estar logado" é simulada aqui com um cookie.
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  
+
   // Lista de páginas públicas que não exigem login
   const publicPaths = ['/login', '/register']
 
@@ -22,15 +22,13 @@ export function middleware(request: NextRequest) {
 
   // Se não houver token de sessão, redirecione para o login
   // Exceto para as próprias páginas de autenticação para evitar loop de redirecionamento.
-  if (!sessionToken && !pathname.startsWith('/login')) {
-     const loginUrl = new URL('/login', request.url)
-     return NextResponse.redirect(loginUrl)
-  }
-  
-  // Se o usuário estiver logado e tentar acessar /login, redirecione para o dashboard
+  if (!sessionToken && !publicPaths.some(path => pathname.startsWith(path))) {
+    const loginUrl = new URL('/login', request.url)
+    return NextResponse.redirect(loginUrl)
+  }  // Se o usuário estiver logado e tentar acessar /login, redirecione para o dashboard
   if (sessionToken && pathname.startsWith('/login')) {
-      const homeUrl = new URL('/', request.url)
-      return NextResponse.redirect(homeUrl)
+    const dashboardUrl = new URL('/dashboard', request.url)
+    return NextResponse.redirect(dashboardUrl)
   }
 
   return NextResponse.next()

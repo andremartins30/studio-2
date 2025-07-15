@@ -34,7 +34,7 @@ export function LoginForm() {
         description: result.error,
       });
     }
-    
+
     // O redirecionamento em caso de sucesso é tratado pela Server Action
     // Se houver um erro, o loading é desativado para permitir nova tentativa.
     setIsLoading(false);
@@ -44,8 +44,8 @@ export function LoginForm() {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="mx-auto max-w-sm w-full">
         <CardHeader className="text-center">
-            <ShieldCheck className="mx-auto h-12 w-12 text-accent mb-4" />
-          <CardTitle className="text-2xl">EPI Control Center</CardTitle>
+          <ShieldCheck className="mx-auto h-12 w-12 text-accent mb-4" />
+          <CardTitle className="text-2xl">Control Center</CardTitle>
           <CardDescription>
             Digite suas credenciais para acessar o painel
           </CardDescription>
@@ -54,34 +54,34 @@ export function LoginForm() {
           <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-               <div className="relative">
+              <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="admin@epicontrol.com"
-                    defaultValue="admin@epicontrol.com"
-                    required
-                    className="pl-10"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="admin@epicontrol.com"
+                  defaultValue="admin@epicontrol.com"
+                  required
+                  className="pl-10"
                 />
               </div>
             </div>
             <div className="grid gap-2">
-               <div className="flex items-center">
-                    <Label htmlFor="password">Senha</Label>
-               </div>
-               <div className="relative">
-                 <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                    id="password" 
-                    name="password"
-                    type="password"
-                    defaultValue="password"
-                    required 
-                    className="pl-10"
+              <div className="flex items-center">
+                <Label htmlFor="password">Senha</Label>
+              </div>
+              <div className="relative">
+                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  defaultValue="password"
+                  required
+                  className="pl-10"
                 />
-               </div>
+              </div>
             </div>
             <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isLoading}>
               {isLoading && <RefreshCw className="mr-2 h-4 w-4 animate-spin" />}
