@@ -28,16 +28,16 @@ import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/enrollment', label: 'Biometric Enrollment', icon: UserPlus },
-  { href: '/verification', label: 'Identity Verification', icon: ScanFace },
-  { href: '/materials', label: 'Material Management', icon: Construction },
-  { href: '/history', label: 'Transaction History', icon: History },
+  { href: '/', label: 'Painel de Controle', icon: LayoutDashboard },
+  { href: '/enrollment', label: 'Cadastro Biométrico', icon: UserPlus },
+  { href: '/verification', label: 'Verificação de Identidade', icon: ScanFace },
+  { href: '/materials', label: 'Gestão de Materiais', icon: Construction },
+  { href: '/history', label: 'Histórico de Transações', icon: History },
 ];
 
 const secondaryNavItems = [
-    { href: '/settings', label: 'System Configuration', icon: Settings },
-    { href: '/help', label: 'Help & Support', icon: HelpCircle },
+    { href: '/settings', label: 'Configuração do Sistema', icon: Settings },
+    { href: '/help', label: 'Ajuda & Suporte', icon: HelpCircle },
 ]
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -103,7 +103,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <AvatarFallback>AD</AvatarFallback>
             </Avatar>
             <div className="flex flex-col text-sm">
-                <span className="font-medium text-sidebar-foreground">Admin User</span>
+                <span className="font-medium text-sidebar-foreground">Usuário Admin</span>
                 <span className="text-sidebar-foreground/70">admin@epicontrol.com</span>
             </div>
           </div>
@@ -113,7 +113,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="flex h-14 items-center gap-4 border-b bg-card px-6">
            <SidebarTrigger className="md:hidden" />
            <div className="flex-1">
-             <h1 className="text-lg font-semibold tracking-tight">EPI Control Center</h1>
+             <h1 className="text-lg font-semibold tracking-tight">Central de Controle de EPI</h1>
            </div>
         </header>
         <main className="flex-1 p-6 md:p-8">

@@ -5,8 +5,8 @@ export default function EnrollmentPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        title="Biometric Enrollment"
-        description="Register new users by capturing their image and linking it to an employee ID."
+        title="Cadastro Biométrico"
+        description="Cadastre novos usuários capturando sua imagem e vinculando-a a uma matrícula de funcionário."
       />
       <div className="max-w-2xl mx-auto w-full">
          <EnrollmentForm />

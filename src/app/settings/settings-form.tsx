@@ -16,12 +16,12 @@ export function SettingsForm() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
-        // Simulate saving to a backend
+        // Simula o salvamento em um backend
         setTimeout(() => {
             setIsLoading(false);
             toast({
-                title: "Configuration Saved",
-                description: "Your API settings have been successfully updated.",
+                title: "Configuração Salva",
+                description: "Suas configurações de API foram atualizadas com sucesso.",
             });
         }, 1500);
     };
@@ -31,16 +31,16 @@ export function SettingsForm() {
             <div className="grid gap-6">
                 <Card>
                     <CardHeader>
-                        <CardTitle>UNISYSTEM Integration</CardTitle>
-                        <CardDescription>Configure the API connection for UNISYSTEM ERP.</CardDescription>
+                        <CardTitle>Integração UNISYSTEM</CardTitle>
+                        <CardDescription>Configure a conexão da API para o ERP UNISYSTEM.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="unisystem-api-url">API Endpoint URL</Label>
+                            <Label htmlFor="unisystem-api-url">URL do Endpoint da API</Label>
                             <Input id="unisystem-api-url" defaultValue="https://api.unisystem.com/v2/" placeholder="https://api.unisystem.com/v2/" />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="unisystem-api-key">API Key</Label>
+                            <Label htmlFor="unisystem-api-key">Chave da API</Label>
                             <Input id="unisystem-api-key" type="password" defaultValue="************" />
                         </div>
                     </CardContent>
@@ -48,12 +48,12 @@ export function SettingsForm() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>TOTVS RM Integration</CardTitle>
-                        <CardDescription>Configure the API connection for TOTVS RM.</CardDescription>
+                        <CardTitle>Integração TOTVS RM</CardTitle>
+                        <CardDescription>Configure a conexão da API para o TOTVS RM.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="totvs-api-url">API Endpoint URL</Label>
+                            <Label htmlFor="totvs-api-url">URL do Endpoint da API</Label>
                             <Input id="totvs-api-url" defaultValue="https://api.totvs.com.br/rm/v1/" placeholder="https://api.totvs.com.br/rm/v1/" />
                         </div>
                         <div className="space-y-2">
@@ -70,7 +70,7 @@ export function SettingsForm() {
                 <div className="flex justify-end">
                     <Button type="submit" disabled={isLoading} className="bg-accent hover:bg-accent/90">
                         {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                        Save Configuration
+                        Salvar Configuração
                     </Button>
                 </div>
             </div>

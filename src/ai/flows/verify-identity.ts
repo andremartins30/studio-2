@@ -2,11 +2,11 @@
 'use server';
 
 /**
- * @fileOverview An AI agent to verify a user's identity against registered biometric data.
+ * @fileOverview Um agente de IA para verificar a identidade de um usuário contra dados biométricos registrados.
  *
- * - verifyIdentity - A function that handles the identity verification process.
- * - VerifyIdentityInput - The input type for the verifyIdentity function.
- * - VerifyIdentityOutput - The return type for the verifyIdentity function.
+ * - verifyIdentity - Uma função que lida com o processo de verificação de identidade.
+ * - VerifyIdentityInput - O tipo de entrada para a função verifyIdentity.
+ * - VerifyIdentityOutput - O tipo de retorno para a função verifyIdentity.
  */
 
 import {ai} from '@/ai/genkit';
@@ -16,18 +16,18 @@ const VerifyIdentityInputSchema = z.object({
   photoDataUri: z
     .string()
     .describe(
-      "A photo of the user, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "Uma foto do usuário, como uma URI de dados que deve incluir um tipo MIME e usar codificação Base64. Formato esperado: 'data:<mimetype>;base64,<encoded_data>'."
     ),
-  employeeId: z.string().describe('The employee ID of the user.'),
+  employeeId: z.string().describe('A matrícula do funcionário.'),
 });
 export type VerifyIdentityInput = z.infer<typeof VerifyIdentityInputSchema>;
 
 const VerifyIdentityOutputSchema = z.object({
-  isVerified: z.boolean().describe('Whether the user is verified or not.'),
-  confidence: z.number().describe('The confidence level of the verification.'),
+  isVerified: z.boolean().describe('Se o usuário foi verificado ou não.'),
+  confidence: z.number().describe('O nível de confiança da verificação.'),
   possibleAlternatives: z
     .array(z.string())
-    .describe('Possible alternative employee IDs if verification fails.'),
+    .describe('Possíveis matrículas alternativas se a verificação falhar.'),
 });
 export type VerifyIdentityOutput = z.infer<typeof VerifyIdentityOutputSchema>;
 
@@ -39,16 +39,16 @@ const prompt = ai.definePrompt({
   name: 'verifyIdentityPrompt',
   input: {schema: VerifyIdentityInputSchema},
   output: {schema: VerifyIdentityOutputSchema},
-  prompt: `You are an AI security assistant specializing in verifying user identities.
+  prompt: `Você é um assistente de segurança de IA especializado em verificar identidades de usuários.
 
-You will receive a photo of a user and their employee ID. You will compare the photo against the registered biometric data for that employee ID.
+Você receberá uma foto de um usuário e sua matrícula. Você comparará a foto com os dados biométricos registrados para essa matrícula.
 
-Based on your analysis, determine whether the user is verified or not. Provide a confidence level for your verification.
+Com base em sua análise, determine se o usuário foi verificado ou não. Forneça um nível de confiança para sua verificação.
 
-If the verification fails, provide a list of possible alternative employee IDs.
+Se a verificação falhar, forneça uma lista de possíveis matrículas alternativas.
 
-Photo: {{media url=photoDataUri}}
-Employee ID: {{{employeeId}}}`,
+Foto: {{media url=photoDataUri}}
+Matrícula: {{{employeeId}}}`,
 });
 
 const verifyIdentityFlow = ai.defineFlow(

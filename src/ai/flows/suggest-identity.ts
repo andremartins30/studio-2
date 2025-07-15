@@ -1,11 +1,11 @@
 // src/ai/flows/suggest-identity.ts
 'use server';
 /**
- * @fileOverview A flow that suggests possible alternative identities based on biometric data.
+ * @fileOverview Um fluxo que sugere possíveis identidades alternativas com base em dados biométricos.
  *
- * - suggestIdentity - A function that suggests alternative identities.
- * - SuggestIdentityInput - The input type for the suggestIdentity function.
- * - SuggestIdentityOutput - The return type for the suggestIdentity function.
+ * - suggestIdentity - Uma função que sugere identidades alternativas.
+ * - SuggestIdentityInput - O tipo de entrada para a função suggestIdentity.
+ * - SuggestIdentityOutput - O tipo de retorno para a função suggestIdentity.
  */
 
 import {ai} from '@/ai/genkit';
@@ -15,10 +15,10 @@ const SuggestIdentityInputSchema = z.object({
   photoDataUri: z
     .string()
     .describe(
-      "A photo of the person, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "Uma foto da pessoa, como uma URI de dados que deve incluir um tipo MIME e usar codificação Base64. Formato esperado: 'data:<mimetype>;base64,<encoded_data>'."
     ),
-  employeeId: z.string().describe('The employee ID of the person.'),
-  name: z.string().describe('The name of the person.'),
+  employeeId: z.string().describe('A matrícula do funcionário.'),
+  name: z.string().describe('O nome da pessoa.'),
 });
 export type SuggestIdentityInput = z.infer<typeof SuggestIdentityInputSchema>;
 
@@ -26,14 +26,14 @@ const SuggestIdentityOutputSchema = z.object({
   possibleIdentities: z
     .array(
       z.object({
-        employeeId: z.string().describe('The employee ID of the possible identity.'),
-        name: z.string().describe('The name of the possible identity.'),
+        employeeId: z.string().describe('A matrícula da possível identidade.'),
+        name: z.string().describe('O nome da possível identidade.'),
         confidence: z
           .number()
-          .describe('The confidence level of the suggested identity.'),
+          .describe('O nível de confiança da identidade sugerida.'),
       })
     )
-    .describe('A list of possible alternative identities.'),
+    .describe('Uma lista de possíveis identidades alternativas.'),
 });
 export type SuggestIdentityOutput = z.infer<typeof SuggestIdentityOutputSchema>;
 
@@ -45,14 +45,14 @@ const prompt = ai.definePrompt({
   name: 'suggestIdentityPrompt',
   input: {schema: SuggestIdentityInputSchema},
   output: {schema: SuggestIdentityOutputSchema},
-  prompt: `Based on the provided biometric data and employee information, suggest possible alternative identities.
+  prompt: `Com base nos dados biométricos e informações do funcionário fornecidas, sugira possíveis identidades alternativas.
 
-  Photo: {{media url=photoDataUri}}
-  Employee ID: {{{employeeId}}}
-  Name: {{{name}}}
+  Foto: {{media url=photoDataUri}}
+  Matrícula: {{{employeeId}}}
+  Nome: {{{name}}}
 
-  Return a list of possible identities with their employee ID, name, and a confidence level.
-  Ensure the confidence level reflects the likelihood of the suggested identity being correct.
+  Retorne uma lista de possíveis identidades com sua matrícula, nome e um nível de confiança.
+  Garanta que o nível de confiança reflita a probabilidade de a identidade sugerida estar correta.
   `,
 });
 

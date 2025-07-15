@@ -20,7 +20,7 @@ export function EnrollmentForm() {
   const handleCapture = () => {
     setIsCapturing(true);
     setTimeout(() => {
-      // Simulate camera capture
+      // Simula captura da câmera
       const timestamp = new Date().getTime();
       setImageSrc(`https://placehold.co/400x400.png?t=${timestamp}`);
       setIsCapturing(false);
@@ -31,20 +31,20 @@ export function EnrollmentForm() {
     if (!employeeName || !employeeId || !imageSrc) {
       toast({
         variant: "destructive",
-        title: "Missing Information",
-        description: "Please provide name, ID, and capture an image.",
+        title: "Informações Faltando",
+        description: "Por favor, forneça nome, matrícula e capture uma imagem.",
       });
       return;
     }
     setIsLoading(true);
-    // Simulate API call
+    // Simula chamada de API
     setTimeout(() => {
       setIsLoading(false);
       toast({
-        title: "User Registered",
-        description: `Employee ${employeeName} (ID: ${employeeId}) has been successfully enrolled.`,
+        title: "Usuário Registrado",
+        description: `Funcionário ${employeeName} (Matrícula: ${employeeId}) foi cadastrado com sucesso.`,
       });
-      // Reset form
+      // Reseta o formulário
       setEmployeeName("");
       setEmployeeId("");
       setImageSrc(null);
@@ -54,33 +54,33 @@ export function EnrollmentForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>New User Registration</CardTitle>
-        <CardDescription>Fill in the details below to enroll a new user.</CardDescription>
+        <CardTitle>Cadastro de Novo Usuário</CardTitle>
+        <CardDescription>Preencha os detalhes abaixo para cadastrar um novo usuário.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="employee-name">Employee Name</Label>
+          <Label htmlFor="employee-name">Nome do Funcionário</Label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input id="employee-name" placeholder="e.g., Maria Souza" value={employeeName} onChange={(e) => setEmployeeName(e.target.value)} className="pl-10" />
+            <Input id="employee-name" placeholder="ex: Maria Souza" value={employeeName} onChange={(e) => setEmployeeName(e.target.value)} className="pl-10" />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="employee-id">Employee ID</Label>
+          <Label htmlFor="employee-id">Matrícula</Label>
           <div className="relative">
             <Badge className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input id="employee-id" placeholder="e.g., 301" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="pl-10" />
+            <Input id="employee-id" placeholder="ex: 301" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} className="pl-10" />
           </div>
         </div>
         <div className="space-y-2">
-          <Label>Biometric Capture</Label>
+          <Label>Captura Biométrica</Label>
           <div className="w-full aspect-square bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
             {imageSrc ? (
-              <Image src={imageSrc} alt="Captured image" layout="fill" objectFit="cover" data-ai-hint="person portrait" />
+              <Image src={imageSrc} alt="Imagem capturada" layout="fill" objectFit="cover" data-ai-hint="person portrait" />
             ) : (
               <div className="text-center text-muted-foreground">
                 <Camera className="mx-auto h-12 w-12" />
-                <p>Image preview will appear here</p>
+                <p>A prévia da imagem aparecerá aqui</p>
               </div>
             )}
             {isCapturing && (
@@ -91,14 +91,14 @@ export function EnrollmentForm() {
           </div>
           <Button onClick={handleCapture} disabled={isCapturing} className="w-full" variant="secondary">
             <Camera className="mr-2 h-4 w-4" />
-            {isCapturing ? "Capturing..." : imageSrc ? "Retake Photo" : "Capture Photo"}
+            {isCapturing ? "Capturando..." : imageSrc ? "Tirar Outra Foto" : "Capturar Foto"}
           </Button>
         </div>
       </CardContent>
       <CardFooter>
         <Button onClick={handleRegister} disabled={isLoading} className="w-full bg-accent hover:bg-accent/90">
             {isLoading && <RefreshCw className="mr-2 h-4 w-4 animate-spin" />}
-            Register User
+            Cadastrar Usuário
         </Button>
       </CardFooter>
     </Card>
