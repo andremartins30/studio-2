@@ -37,6 +37,7 @@ const navItems = [
   { href: '/dashboard', label: 'Painel de Controle', icon: LayoutDashboard },
   { href: '/enrollment', label: 'Cadastro Biométrico', icon: UserPlus },
   { href: '/verification', label: 'Verificação de Identidade', icon: ScanFace },
+  { href: '/epi-system', label: 'Sistema de Empréstimo de EPIs', icon: Construction },
   { href: '/materials', label: 'Gestão de Materiais', icon: Construction },
   { href: '/history', label: 'Histórico de Transações', icon: History },
 ];

@@ -1,0 +1,215 @@
+/* Estilos específicos para o sistema de EPIs */
+
+/* Wizard Header */
+.wizard-header {
+    background-color: hsl(202, 46%, 12%);
+    color: white;
+}
+
+.wizard-progress {
+    --progress-foreground: hsl(27, 79%, 54%);
+}
+
+/* Wizard Navigation */
+.wizard-navigation {
+    @apply flex flex-wrap justify-between items-center gap-2 p-4 bg-white rounded-lg border shadow-sm;
+}
+
+@media (max-width: 768px) {
+    .wizard-navigation {
+        @apply flex-col gap-4;
+    }
+
+    .wizard-step {
+        @apply flex items-center gap-2 w-full;
+    }
+
+    .wizard-connector {
+        @apply hidden;
+    }
+}
+
+/* Tabelas responsivas */
+.epi-table-container {
+    @apply overflow-x-auto;
+}
+
+.epi-table {
+    @apply min-w-full;
+}
+
+@media (max-width: 768px) {
+
+    .epi-table th,
+    .epi-table td {
+        @apply text-xs px-2 py-1;
+    }
+}
+
+/* Cards de seleção */
+.selection-card {
+    @apply transition-all duration-200 hover:shadow-md;
+}
+
+.selection-card:hover {
+    @apply border-blue-300;
+}
+
+.selected-item {
+    @apply bg-blue-50 border-blue-200;
+}
+
+/* Botões do wizard */
+.wizard-buttons {
+    @apply flex justify-between items-center pt-6 border-t border-gray-200;
+}
+
+@media (max-width: 768px) {
+    .wizard-buttons {
+        @apply flex-col gap-4;
+    }
+
+    .wizard-buttons>div {
+        @apply flex gap-2 w-full;
+    }
+
+    .wizard-buttons button {
+        @apply flex-1;
+    }
+}
+
+/* Status indicators */
+.status-indicator {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.status-success {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-warning {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-error {
+    @apply bg-red-100 text-red-800;
+}
+
+.status-info {
+    @apply bg-blue-100 text-blue-800;
+}
+
+/* Progress indicators */
+.progress-step {
+    @apply relative;
+}
+
+.progress-step::after {
+    content: '';
+    @apply absolute top-1/2 left-full w-full h-0.5 bg-gray-300 transform -translate-y-1/2;
+}
+
+.progress-step.completed::after {
+    @apply bg-green-500;
+}
+
+.progress-step:last-child::after {
+    @apply hidden;
+}
+
+/* Form improvements */
+.epi-form-group {
+    @apply space-y-2;
+}
+
+.epi-form-label {
+    @apply text-sm font-medium text-gray-700;
+}
+
+.epi-form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.epi-form-select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white;
+}
+
+/* Loading states */
+.loading-spinner {
+    @apply animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full;
+}
+
+.loading-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+/* Tooltips */
+.tooltip {
+    @apply relative;
+}
+
+.tooltip:hover .tooltip-content {
+    @apply visible opacity-100;
+}
+
+.tooltip-content {
+    @apply invisible opacity-0 absolute z-10 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg transition-opacity duration-300;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.tooltip-content::after {
+    content: '';
+    @apply absolute border-4 border-transparent border-t-gray-900;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        @apply hidden;
+    }
+
+    .wizard-navigation,
+    .wizard-buttons {
+        @apply hidden;
+    }
+
+    .print-only {
+        @apply block;
+    }
+}
