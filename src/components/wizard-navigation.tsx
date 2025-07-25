@@ -4,35 +4,23 @@ import React from 'react';
 import { useWizard } from '@/contexts/wizard-context';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-const STEPS = {
-    fornecimento: [
-        { step: 1, title: 'Parâmetros', description: 'Configurações iniciais' },
-        { step: 2, title: 'Funcionários', description: 'Seleção de pessoas' },
-        { step: 3, title: 'Lote', description: 'EPIs disponíveis' },
-        { step: 4, title: 'Ações', description: 'Definir empréstimos' },
-        { step: 5, title: 'Finalização', description: 'Processo concluído' },
-    ],
-    devolucao: [
-        { step: 1, title: 'Parâmetros', description: 'Configurações iniciais' },
-        { step: 2, title: 'Funcionários', description: 'Com EPIs emprestados' },
-        { step: 3, title: 'Ação por Lote', description: 'Configurar devoluções' },
-        { step: 4, title: 'Motivo', description: 'Razão da devolução' },
-        { step: 5, title: 'Finalização', description: 'Processo concluído' },
-    ],
-    descarte: [
-        { step: 1, title: 'Parâmetros', description: 'Configurações iniciais' },
-        { step: 2, title: 'Funcionários', description: 'Com EPIs p/ descarte' },
-        { step: 3, title: 'Ação por Lote', description: 'Configurar descartes' },
-        { step: 4, title: 'Motivo', description: 'Razão do descarte' },
-        { step: 5, title: 'Finalização', description: 'Processo concluído' },
-    ]
-};
+import { getStepInfo } from '@/config/wizard-flows';
+import { useWizardValidation } from '@/hooks/use-wizard-validation';
 
 export function WizardNavigation() {
     const { currentStep, currentFlow, goToStep } = useWizard();
+    const { canNavigateTo } = useWizardValidation();
 
-    const steps = STEPS[currentFlow];
+    // Gerar steps dinamicamente baseado na configuração
+    const steps = Array.from({ length: 5 }, (_, index) => {
+        const stepNumber = index + 1;
+        const stepInfo = getStepInfo(currentFlow, stepNumber as 1 | 2 | 3 | 4 | 5);
+        return {
+            step: stepNumber,
+            title: stepInfo.title.split(' ')[0], // Primeira palavra do título
+            description: stepInfo.description
+        };
+    });
 
     return (
         <div className="flex justify-between items-center mb-4 p-3 bg-white rounded-lg border">
@@ -48,12 +36,12 @@ export function WizardNavigation() {
                                 currentStep > step.step && 'bg-green-600 text-white'
                             )}
                             onClick={() => {
-                                // Só permite navegar para etapas anteriores ou atual
-                                if (step.step <= currentStep) {
-                                    goToStep(step.step as any);
+                                // Usar validação centralizada para determinar se pode navegar
+                                if (canNavigateTo(step.step as 1 | 2 | 3 | 4 | 5)) {
+                                    goToStep(step.step as 1 | 2 | 3 | 4 | 5);
                                 }
                             }}
-                            disabled={step.step > currentStep}
+                            disabled={!canNavigateTo(step.step as 1 | 2 | 3 | 4 | 5)}
                         >
                             {currentStep > step.step ? '✓' : step.step}
                         </Button>

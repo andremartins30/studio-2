@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { WizardNavigation } from '@/components/wizard-navigation';
 import { WizardSummary } from '@/components/wizard-summary';
+import { getWizardTitle, getStepInfo } from '@/config/wizard-flows';
 import {
     ParameterSelection,
     EmployeeSelection,
@@ -19,41 +20,15 @@ import DevolutionReason from './steps/devolution-reason';
 import DescarteEmployeeSelection from './steps/descarte-employee-selection';
 import DescarteActionDefinition from './steps/descarte-action-definition';
 import DescarteReason from './steps/descarte-reason';
-
-const STEP_TITLES = {
-    fornecimento: {
-        1: 'Seleção de Parâmetros',
-        2: 'Seleção de Funcionários',
-        3: 'Seleção do Lote',
-        4: 'Definir Ação por Lote',
-        5: 'Execução Concluída',
-    },
-    devolucao: {
-        1: 'Seleção de Parâmetros',
-        2: 'Seleção de Funcionários',
-        3: 'Definir Ação por Lote',
-        4: 'Motivo da Devolução',
-        5: 'Execução Concluída',
-    },
-    descarte: {
-        1: 'Seleção de Parâmetros',
-        2: 'Seleção de Funcionários',
-        3: 'Definir Ação por Lote',
-        4: 'Motivo do Descarte',
-        5: 'Execução Concluída',
-    }
-};
+import CancelamentoParameterSelection from './steps/cancelamento-parameter-selection';
+import CancelamentoEmployeeSelection from './steps/cancelamento-employee-selection';
 
 export default function EpiWizard() {
     const { currentStep, currentFlow } = useWizard();
 
     const progress = (currentStep / 5) * 100;
-    const stepTitles = STEP_TITLES[currentFlow];
-    const wizardTitle = currentFlow === 'devolucao'
-        ? 'Assistente para Devolução de EPIs'
-        : currentFlow === 'descarte'
-        ? 'Assistente para Descarte de EPIs'
-        : 'Assistente para Fornecimento Automático';
+    const wizardTitle = getWizardTitle(currentFlow);
+    const stepInfo = getStepInfo(currentFlow, currentStep);
 
     const renderCurrentStep = () => {
         // Fluxo de Fornecimento
@@ -110,6 +85,24 @@ export default function EpiWizard() {
             }
         }
 
+        // Fluxo de Cancelamento
+        if (currentFlow === 'cancelamento') {
+            switch (currentStep) {
+                case 1:
+                    return <CancelamentoParameterSelection />;
+                case 2:
+                    return <CancelamentoEmployeeSelection />;
+                case 3:
+                    return <ParameterSelection />; // TODO: Criar CancelamentoActionDefinition
+                case 4:
+                    return <ParameterSelection />; // TODO: Criar CancelamentoReason
+                case 5:
+                    return <ExecutionComplete />;
+                default:
+                    return <CancelamentoParameterSelection />;
+            }
+        }
+
         // Fallback
         return <ParameterSelection />;
     };
@@ -137,7 +130,7 @@ export default function EpiWizard() {
                             />
                         </div>
                         <div className="mt-2 text-sm opacity-90">
-                            {stepTitles[currentStep]}
+                            {stepInfo.title}
                         </div>
                     </div>
                 </CardHeader>

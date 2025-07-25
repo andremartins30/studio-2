@@ -13,3 +13,7 @@ export { default as DevolutionReason } from './devolution-reason';
 export { default as DescarteEmployeeSelection } from './descarte-employee-selection';
 export { default as DescarteActionDefinition } from './descarte-action-definition';
 export { default as DescarteReason } from './descarte-reason';
+
+// Componentes específicos para cancelamento
+export { default as CancelamentoParameterSelection } from './cancelamento-parameter-selection';
+export { default as CancelamentoEmployeeSelection } from './cancelamento-employee-selection';

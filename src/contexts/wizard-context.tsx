@@ -1,7 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { WizardState, WizardStep, WizardContextType, WizardFlow } from '@/types/epi';
+import { WizardState, WizardStep, WizardContextType, WizardFlow, StepValidation } from '@/types/epi';
+import { validateStep, canNavigateToStep } from '@/config/wizard-flows';
 
 const initialState: WizardState = {
     tipoOperacao: 'fornecimento',
@@ -69,11 +70,20 @@ export function WizardProvider({ children }: { children: ReactNode }) {
         } else if (flow === 'descarte') {
             tipoOperacao = 'descarte';
         }
-        
+
         setState({
             ...initialState,
             tipoOperacao
         });
+    };
+
+    // Funções de validação usando a configuração centralizada
+    const validateCurrentStep = (): StepValidation => {
+        return validateStep(currentStep, state);
+    };
+
+    const canNavigateToStepFn = (step: WizardStep): boolean => {
+        return canNavigateToStep(step, state);
     };
 
     return (
@@ -87,6 +97,8 @@ export function WizardProvider({ children }: { children: ReactNode }) {
             goToStep,
             resetWizard,
             switchFlow,
+            validateCurrentStep,
+            canNavigateToStep: canNavigateToStepFn,
         }}>
             {children}
         </WizardContext.Provider>
