@@ -1,6 +1,7 @@
 const express = require('express');
 const colaboradorRoutes = require('./colaborador.routes');
 const epiRoutes = require('./epi.routes');
+const wizardRoutes = require('./wizard.routes');
 const legacyRoutes = require('./legacy.routes');
 
 const router = express.Router();
@@ -11,6 +12,7 @@ const router = express.Router();
 
 // Rotas da API REST organizadas
 router.use('/api/colaboradores', colaboradorRoutes);
+router.use('/api/wizard', wizardRoutes);
 router.use('/api', epiRoutes);
 
 // Rotas legadas para compatibilidade (sem prefixo /api)
@@ -39,6 +41,11 @@ router.get('/api', (req, res) => {
                 base: '/api/catalogo-epi',
                 methods: ['GET', 'POST'],
                 description: 'Gerenciamento de catálogo EPI'
+            },
+            wizard: {
+                base: '/api/wizard',
+                methods: ['GET', 'POST'],
+                description: 'Ações do wizard EPI (fornecimento, devolução, descarte, cancelamento)'
             },
             legacy: {
                 base: '/',
