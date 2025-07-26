@@ -1,5 +1,6 @@
 // lib/api.ts - Serviço de API para Next.js
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+const SOAP_API_BASE_URL = process.env.NEXT_PUBLIC_SOAP_API_URL || 'http://localhost:3001';
 
 export interface User {
     id: string;
@@ -26,6 +27,63 @@ export interface ApiError {
         message: string;
         value: any;
     }>;
+}
+
+// === TIPOS PARA API SOAP ===
+
+// Tipos para colaboradores vindos da API SOAP
+export interface ColaboradorSOAP {
+    CHAPA: string;
+    NOME: string;
+    CODFUNCAO: string;
+    CODSECAO: string;
+    NOMEFUNCAO?: string;
+    NOMESECAO?: string;
+    ATIVO?: boolean;
+}
+
+export interface ColaboradoresResponse {
+    success: boolean;
+    totalColaboradores: number;
+    colaboradores: ColaboradorSOAP[];
+}
+
+// Tipos para grupos EPI vindos da API SOAP
+export interface GrupoEpiSOAP {
+    CODGRUPOEPI: string;
+    NOME: string;
+    DESCRICAO?: string;
+}
+
+export interface GruposEpiResponse {
+    success: boolean;
+    totalGrupos: number;
+    gruposEPI: GrupoEpiSOAP[];
+}
+
+// Tipos para catálogo EPI vindos da API SOAP
+export interface EpiItemSOAP {
+    CODIGO: string;
+    NOME: string;
+    CA?: string;
+    GRUPO?: string;
+    TIPO?: string;
+    ATIVO?: boolean;
+    DESCRICAO?: string;
+}
+
+export interface CatalogoEpiResponse {
+    success: boolean;
+    totalItens: number;
+    catalogoEPI: EpiItemSOAP[];
+}
+
+// Tipos para consulta SQL genérica
+export interface ConsultaSOAPRequest {
+    codSentenca: string;
+    codColigada: string;
+    codSistema: string;
+    parameters: string;
 }
 
 class ApiService {
@@ -62,6 +120,89 @@ class ApiService {
             throw error;
         }
     }
+
+    // === MÉTODOS PARA API SOAP ===
+
+    /**
+     * Busca todos os colaboradores via API SOAP
+     */
+    async getColaboradores(): Promise<ColaboradoresResponse> {
+        console.log('🔍 Buscando colaboradores via API SOAP...');
+
+        const response = await this.handleFetch(`${SOAP_API_BASE_URL}/colaboradores`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+        });
+
+        const data = await this.handleResponse<ColaboradoresResponse>(response);
+        console.log(`✅ ${data.totalColaboradores || 0} colaboradores encontrados`);
+
+        return data;
+    }
+
+    /**
+     * Busca todos os grupos EPI via API SOAP
+     */
+    async getGruposEpi(): Promise<GruposEpiResponse> {
+        console.log('🛡️ Buscando grupos EPI via API SOAP...');
+
+        const response = await this.handleFetch(`${SOAP_API_BASE_URL}/grupo-epi`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+        });
+
+        const data = await this.handleResponse<GruposEpiResponse>(response);
+        console.log(`✅ ${data.totalGrupos || 0} grupos EPI encontrados`);
+
+        return data;
+    }
+
+    /**
+     * Busca o catálogo de EPIs via API SOAP
+     * @param codGrupo - Código do grupo EPI (opcional)
+     */
+    async getCatalogoEpi(codGrupo?: string): Promise<CatalogoEpiResponse> {
+        console.log('🛡️ Buscando catálogo EPI via API SOAP...', { codGrupo });
+
+        // Se um grupo específico for informado, enviar como parâmetro
+        const body = codGrupo ? {
+            codSentenca: '00.003',
+            codColigada: '0',
+            codSistema: 'V',
+            parameters: `COLIGADA=1; CODGRUPO=${codGrupo}`
+        } : undefined;
+
+        const response = await this.handleFetch(`${SOAP_API_BASE_URL}/catalogo-epi`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: body ? JSON.stringify(body) : undefined,
+        });
+
+        const data = await this.handleResponse<CatalogoEpiResponse>(response);
+        console.log(`✅ ${data.totalItens || 0} itens EPI encontrados`);
+
+        return data;
+    }
+
+    /**
+     * Realiza consulta SQL genérica via API SOAP
+     */
+    async consultaSOAP(request: ConsultaSOAPRequest): Promise<any> {
+        console.log('🔍 Realizando consulta SOAP personalizada...', request);
+
+        const response = await this.handleFetch(`${SOAP_API_BASE_URL}/consulta`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify(request),
+        });
+
+        const data = await this.handleResponse(response);
+        console.log('✅ Consulta SOAP realizada com sucesso');
+
+        return data;
+    }
+
+    // === MÉTODOS DE AUTENTICAÇÃO (EXISTENTES) ===
 
     // Auth endpoints
     async register(userData: {

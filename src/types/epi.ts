@@ -22,47 +22,75 @@ export interface EpiItem {
     eficaz: boolean;
 }
 
-export interface EmprestadoEpiItem {
-    id: string;
-    codigoEpi: string;
-    idLote: string;
-    nome: string;
-    itemEpi: string;
-    detalhe: string;
-    dataEmprestimo: string;
-    dataDevolucao?: string;
-    situacao: 'emprestado' | 'vencido' | 'danificado';
-    employeeId: string;
-    acao: 'devolver' | 'naoDevolver';
+// === TIPOS PARA INTEGRAÇÃO COM API SOAP ===
+
+// Tipos que correspondem aos dados retornados pela API SOAP
+export interface ColaboradorSOAP {
+    CHAPA: string;
+    NOME: string;
+    CODFUNCAO: string;
+    CODSECAO: string;
+    NOMEFUNCAO?: string;
+    NOMESECAO?: string;
+    ATIVO?: string | boolean;
 }
 
-export interface DescarteEpiItem {
-    id: string;
-    situacao: 'ok' | 'com_defeito' | 'vencido';
-    codigoEpi: string;
-    idLote: number;
-    nome: string;
-    itemEpi: string;
-    detalhe: string;
-    dataEntrega: string;
-    acao: 'descartar' | 'nao_descartar';
-    dataDescarte?: string;
-    employeeId: string;
+export interface EpiItemSOAP {
+    CODIGO: string;
+    NOME: string;
+    CA?: string;
+    GRUPO?: string;
+    TIPO?: string;
+    ATIVO?: string | boolean;
+    DESCRICAO?: string;
 }
 
-export interface CancelamentoEpiItem {
+// === FUNÇÕES DE CONVERSÃO ===
+
+/**
+ * Converte colaborador da API SOAP para o formato usado no frontend
+ */
+export function convertColaboradorSOAP(colaboradorSOAP: ColaboradorSOAP): Employee {
+    return {
+        id: colaboradorSOAP.CHAPA, // Usando CHAPA como ID único
+        matricula: colaboradorSOAP.CHAPA,
+        nome: colaboradorSOAP.NOME,
+        codigoFuncao: colaboradorSOAP.CODFUNCAO,
+        codigoSecao: colaboradorSOAP.CODSECAO
+    };
+}
+
+/**
+ * Converte item EPI da API SOAP para o formato usado no frontend
+ */
+export function convertEpiItemSOAP(epiSOAP: EpiItemSOAP): EpiItem {
+    return {
+        id: epiSOAP.CODIGO, // Usando CODIGO como ID único
+        codigoEpi: epiSOAP.CODIGO,
+        idLote: '1', // Valor padrão - ajustar conforme necessário
+        ca: epiSOAP.CA || '',
+        nome: epiSOAP.NOME,
+        codigoSecao: epiSOAP.GRUPO || '',
+        codigoFilial: 'F001', // Valor padrão - ajustar conforme necessário
+        dataAquisicao: new Date().toLocaleDateString('pt-BR'),
+        quantidade: 1,
+        quantidadeDisponivel: 1, // Valor padrão - ajustar conforme necessário
+        eficaz: epiSOAP.ATIVO === true || epiSOAP.ATIVO === 'true' || epiSOAP.ATIVO === '1'
+    };
+}
+
+// === INTERFACES EXISTENTES ===
+
+export interface LoanAction {
     id: string;
-    codigoEpi: string;
-    idLote: string;
-    nome: string;
-    itemEpi: string;
-    detalhe: string;
-    dataEmprestimo: string;
-    situacao: 'emprestado' | 'ativo';
     employeeId: string;
-    acao: 'cancelar' | 'nao_cancelar';
-    dataCancelamento?: string;
-    motivoCancelamento?: string;
+    employeeName: string;
+    epiId: string;
+    epiName: string;
+    action: string;
+    quantity: number;
+    date: string;
+    observations?: string;
 }
 
 export interface LoteFuncionario {
@@ -71,19 +99,49 @@ export interface LoteFuncionario {
     expandido: boolean;
 }
 
+export interface DescarteEpiItem {
+    codigoEpi: string;
+    nomeEpi: string;
+    ca: string;
+    dataEmprestimo: string;
+    numeroLote: string;
+    quantidade: number;
+    selecionado?: boolean;
+}
+
 export interface LoteCancelamentoFuncionario {
     funcionario: Employee;
     itens: CancelamentoEpiItem[];
     expandido: boolean;
 }
 
-export interface LoanAction {
-    employeeId: string;
-    epiId: string;
-    quantidade: number;
+export interface CancelamentoEpiItem {
+    codigoEpi: string;
+    nomeEpi: string;
+    ca: string;
     dataEmprestimo: string;
-    dataDevolucao?: string;
-    acao: string;
+    numeroLote: string;
+    quantidade: number;
+    selecionado?: boolean;
+    motivo?: string;
+}
+
+export interface DevolutionEpiItem {
+    codigoEpi: string;
+    nomeEpi: string;
+    ca: string;
+    dataEmprestimo: string;
+    numeroLote: string;
+    quantidade: number;
+    selecionado?: boolean;
+    motivoDevolucao?: string;
+    condicaoItem?: 'bom' | 'danificado' | 'perdido';
+}
+
+export interface LoteDevolucaoFuncionario {
+    funcionario: Employee;
+    itens: DevolutionEpiItem[];
+    expandido: boolean;
 }
 
 // === NOVAS INTERFACES PARA PADRONIZAÇÃO ===

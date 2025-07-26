@@ -9,26 +9,68 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Employee } from '@/types/epi';
-import { mockEmployees } from '@/data/mock-data';
-
-// Mock data - em produção viria de uma API
-const allEmployees: Employee[] = mockEmployees;
+import { FuncionarioService } from '@/services/funcionario-service';
 
 export default function EmployeeSelection() {
     const { state, updateState, nextStep, prevStep } = useWizard();
     const { addNotification } = useNotification();
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>(allEmployees);
+    const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
+    const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
+    const [loading, setLoading] = useState(true);
 
+    // Carregar funcionários da API
     useEffect(() => {
+        const carregarFuncionarios = async () => {
+            try {
+                setLoading(true);
+                console.log('🔍 Carregando funcionários da API SOAP...');
+
+                const funcionarios = await FuncionarioService.buscarEmployees();
+                setAllEmployees(funcionarios);
+                setFilteredEmployees(funcionarios);
+
+                console.log(`✅ ${funcionarios.length} funcionários carregados com sucesso`);
+
+                if (funcionarios.length === 0) {
+                    addNotification({
+                        type: 'warning',
+                        title: 'Atenção',
+                        message: 'Nenhum funcionário encontrado na base de dados.',
+                    });
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar funcionários:', error);
+                addNotification({
+                    type: 'error',
+                    title: 'Erro ao Carregar Funcionários',
+                    message: 'Erro de conexão com o servidor. Usando dados de fallback.',
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        carregarFuncionarios();
+    }, [addNotification]);
+
+    // Filtrar funcionários baseado no termo de busca
+    useEffect(() => {
+        if (!searchTerm.trim()) {
+            setFilteredEmployees(allEmployees);
+            return;
+        }
+
+        const termo = searchTerm.toLowerCase();
         const filtered = allEmployees.filter(employee =>
-            employee.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            employee.matricula.includes(searchTerm) ||
-            employee.codigoFuncao.includes(searchTerm) ||
-            employee.codigoSecao.includes(searchTerm)
+            employee.nome.toLowerCase().includes(termo) ||
+            employee.matricula.toLowerCase().includes(termo) ||
+            employee.codigoFuncao.toLowerCase().includes(termo) ||
+            employee.codigoSecao.toLowerCase().includes(termo)
         );
+
         setFilteredEmployees(filtered);
-    }, [searchTerm]);
+    }, [searchTerm, allEmployees]);
 
     const handleEmployeeToggle = (employee: Employee, checked: boolean) => {
         if (checked) {
@@ -81,7 +123,7 @@ export default function EmployeeSelection() {
                         <Button variant="outline" size="sm">⬇️</Button>
                         <Button variant="outline" size="sm">🔍</Button>
                         <div className="text-sm text-gray-500 ml-auto">
-                            1/1
+                            {filteredEmployees.length}/{allEmployees.length}
                         </div>
                         <Button variant="outline" size="sm">📄</Button>
                     </div>
@@ -93,48 +135,62 @@ export default function EmployeeSelection() {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="max-w-md"
+                            disabled={loading}
                         />
                     </div>
 
-                    {/* Tabela de Funcionários */}
-                    <div className="border rounded-lg max-h-64 overflow-y-auto">
-                        <Table>
-                            <TableHeader className="sticky top-0 bg-white">
-                                <TableRow className="bg-gray-50">
-                                    <TableHead className="w-12">✓</TableHead>
-                                    <TableHead>Chapa</TableHead>
-                                    <TableHead>Nome</TableHead>
-                                    <TableHead>Cód. Função</TableHead>
-                                    <TableHead>Cód. Seção</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {filteredEmployees.map((employee) => (
-                                    <TableRow
-                                        key={employee.id}
-                                        className={isEmployeeSelected(employee.id) ? 'bg-blue-50' : ''}
-                                    >
-                                        <TableCell>
-                                            <Checkbox
-                                                checked={isEmployeeSelected(employee.id)}
-                                                onCheckedChange={(checked) =>
-                                                    handleEmployeeToggle(employee, !!checked)
-                                                }
-                                            />
-                                        </TableCell>
-                                        <TableCell className="font-medium">{employee.matricula}</TableCell>
-                                        <TableCell>{employee.nome}</TableCell>
-                                        <TableCell>{employee.codigoFuncao}</TableCell>
-                                        <TableCell>{employee.codigoSecao}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
+                    {/* Loading State */}
+                    {loading && (
+                        <div className="text-center py-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                            <div className="text-gray-500">Carregando funcionários...</div>
+                        </div>
+                    )}
 
-                    {filteredEmployees.length === 0 && (
+                    {/* Tabela de Funcionários */}
+                    {!loading && (
+                        <div className="border rounded-lg max-h-64 overflow-y-auto">
+                            <Table>
+                                <TableHeader className="sticky top-0 bg-white">
+                                    <TableRow className="bg-gray-50">
+                                        <TableHead className="w-12">✓</TableHead>
+                                        <TableHead>Chapa</TableHead>
+                                        <TableHead>Nome</TableHead>
+                                        <TableHead>Cód. Função</TableHead>
+                                        <TableHead>Cód. Seção</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredEmployees.map((employee) => (
+                                        <TableRow
+                                            key={employee.id}
+                                            className={isEmployeeSelected(employee.id) ? 'bg-blue-50' : ''}
+                                        >
+                                            <TableCell>
+                                                <Checkbox
+                                                    checked={isEmployeeSelected(employee.id)}
+                                                    onCheckedChange={(checked) =>
+                                                        handleEmployeeToggle(employee, !!checked)
+                                                    }
+                                                />
+                                            </TableCell>
+                                            <TableCell className="font-medium">{employee.matricula}</TableCell>
+                                            <TableCell>{employee.nome}</TableCell>
+                                            <TableCell>{employee.codigoFuncao}</TableCell>
+                                            <TableCell>{employee.codigoSecao}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )}
+
+                    {!loading && filteredEmployees.length === 0 && (
                         <div className="text-center py-8 text-gray-500">
-                            Nenhum funcionário encontrado com os critérios de busca.
+                            {allEmployees.length === 0
+                                ? 'Nenhum funcionário disponível na base de dados.'
+                                : 'Nenhum funcionário encontrado com os critérios de busca.'
+                            }
                         </div>
                     )}
                 </CardContent>
@@ -178,7 +234,7 @@ export default function EmployeeSelection() {
                     <Button variant="outline" onClick={prevStep} size="sm">
                         ← Voltar
                     </Button>
-                    <Button onClick={handleNext} size="sm">
+                    <Button onClick={handleNext} size="sm" disabled={loading}>
                         Avançar →
                     </Button>
                 </div>

@@ -1,0 +1,207 @@
+<SmtGenericParamsProcRelatorio xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="i1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://www.totvs.com.br/RM/">
+  <CodColigada>5</CodColigada>
+  <CodRelatorio i:nil="true" />
+  <CodUsuario>4dash</CodUsuario>
+  <ColigadaRel>0</ColigadaRel>
+  <ConsideraDtTransferenciaFilial>false</ConsideraDtTransferenciaFilial>
+  <DataSetGerado i:nil="true" />
+  <ExecutarProcessoNovamente>false</ExecutarProcessoNovamente>
+  <HouveCancelamento>false</HouveCancelamento>
+  <HouveEmprestimos>true</HouveEmprestimos>
+  <HouveErros>false</HouveErros>
+  <IdRelatorio>0</IdRelatorio>
+  <PodeVisualizarRelatorio>true</PodeVisualizarRelatorio>
+  <PossuiColunasIds>true</PossuiColunasIds>
+  <TerminouExecucaoProcesso>true</TerminouExecucaoProcesso>
+  <Value xmlns:d2p1="-System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089-System.Data-System.Data.DataSet" i:type="d2p1:DataSet">
+    <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+      <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:LOG="">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="EPISFORM" msdata:CaseSensitive="False" msdata:Locale="pt-BR">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="checkBox" msdata:Caption=" [x]" msprop:_x0024_Visible="True" type="xs:boolean" minOccurs="0" />
+                  <xs:element name="CODCOLIGADA" msdata:Caption="Cód. Coligada" msprop:_x0024_Visible="False" msprop:_x0024_AllowFilter="False" type="xs:int" minOccurs="0" />
+                  <xs:element name="STATUS" msdata:ReadOnly="true" msdata:Caption="Situação" msprop:_x0024_Visible="True" msprop:_x0024_Origin="STATUS" type="xs:decimal" minOccurs="0" />
+                  <xs:element name="CODEPI" msdata:ReadOnly="true" msdata:Caption="Cód. EPI" msprop:_x0024_Alias="VEMPRESTIMOEPI.CODEPI" msprop:_x0024_SecTableOrigin="VEMPRESTIMOEPI" msprop:_x0024_Origin="VEMPRESTIMOEPI.CODEPI" msprop:_x0024_Visible="True" msprop:_x0024_SecField="CODEPI" type="xs:string" minOccurs="0" />
+                  <xs:element name="IDLOTE" msdata:ReadOnly="true" msdata:Caption="Id. Lote" msprop:_x0024_Alias="VEPI.IDLOTE" msprop:_x0024_SecTableOrigin="VEPI" msprop:_x0024_Origin="VEPI.IDLOTE" msprop:_x0024_Visible="True" msprop:_x0024_SecField="IDLOTE" type="xs:decimal" minOccurs="0" />
+                  <xs:element name="NOME" msdata:ReadOnly="true" msdata:Caption="Nome" msprop:_x0024_Alias="VCATALOGOEPI.NOME" msprop:_x0024_SecTableOrigin="VCATALOGOEPI" msprop:_x0024_Origin="VCATALOGOEPI.NOME" msprop:_x0024_Visible="True" msprop:_x0024_SecField="NOME" type="xs:string" minOccurs="0" />
+                  <xs:element name="EMPRESTADO" msdata:ReadOnly="true" msdata:Caption="Nome" msprop:_x0024_Alias="PFUNC.NOME" msprop:_x0024_SecTableOrigin="PFUNC" msprop:_x0024_Origin="PFUNC.NOME" msprop:_x0024_Visible="True" msprop:_x0024_SecField="NOME" type="xs:string" minOccurs="0" />
+                  <xs:element name="CODIGO" msprop:_x0024_Alias="VEMPRESTIMOEPI.CODPESSOA" msprop:_x0024_SecTableOrigin="VEMPRESTIMOEPI" msprop:_x0024_Origin="VEMPRESTIMOEPI.CODPESSOA" msprop:_x0024_SecField="CODPESSOA" type="xs:int" minOccurs="0" />
+                  <xs:element name="ITEMEPI" msdata:Caption="Item de EPI" msprop:_x0024_Alias="VEMPRESTIMOEPI.CODIDENTEPI" msprop:_x0024_SecTableOrigin="VEMPRESTIMOEPI" msprop:_x0024_Origin="VEMPRESTIMOEPI.CODIDENTEPI" msprop:_x0024_Visible="True" msprop:_x0024_SecField="CODIDENTEPI" type="xs:string" default="Automático" minOccurs="0" />
+                  <xs:element name="CHAPA" msprop:_x0024_Alias="PFUNC.CHAPA" msprop:_x0024_SecTableOrigin="PFUNC" msprop:_x0024_Origin="PFUNC.CHAPA" msprop:_x0024_SecField="CHAPA" type="xs:string" minOccurs="0" />
+                  <xs:element name="DETALHE" msdata:ReadOnly="true" msdata:Caption="Detalhe" msprop:_x0024_AllowEdit="True" msprop:_x0024_Origin="DETALHE" type="xs:string" minOccurs="0" />
+                  <xs:element name="EPIEMPRESTADO" msdata:Caption="Emprestado" msprop:_x0024_Visible="False" msprop:_x0024_ControlVisible="False" msprop:_x0024_Origin="EPIEMPRESTADO" type="xs:int" minOccurs="0" />
+                  <xs:element name="CODLOC" msdata:ReadOnly="true" msdata:Caption="Local de Estoque" msprop:_x0024_Visible="False" type="xs:string" minOccurs="0" />
+                  <xs:element name="CODFILIAL" msdata:ReadOnly="true" msdata:Caption="Filial" msprop:_x0024_Visible="False" type="xs:short" minOccurs="0" />
+                  <xs:element name="CA" msdata:ReadOnly="true" msdata:Caption="C.A." msprop:_x0024_Visible="True" type="xs:string" minOccurs="0" />
+                  <xs:element name="QUANTIDADE" msdata:Caption="Quantidade" msprop:_x0024_Visible="True" type="xs:int" minOccurs="0" />
+                  <xs:element name="MOTDEVOLUCAO" msdata:ReadOnly="true" msprop:_x0024_Visible="False" msprop:_x0024_Origin="MOTDEVOLUCAO" type="xs:string" minOccurs="0" />
+                  <xs:element name="DATAEMPRESTIMO" msdata:ReadOnly="true" msdata:Caption="Data de Empréstimo" msprop:_x0024_Alias="DATAEMPRESTIMO" msprop:_x0024_SecTableOrigin="VEMPRESTIMOEPI" msprop:_x0024_Origin="VEMPRESTIMOEPI.DATAEMPRESTIMO" msprop:_x0024_Visible="True" msprop:_x0024_SecField="DATAEMPRESTIMO" type="xs:dateTime" minOccurs="0" />
+                  <xs:element name="DESCARTAVEL" msprop:_x0024_Visible="False" msprop:_x0024_ControlVisible="False" msprop:_x0024_Origin="DESCARTAVEL" type="xs:int" minOccurs="0" />
+                  <xs:element name="OPCAO" msdata:Caption="Ação" msprop:_x0024_Visible="True" type="xs:string" minOccurs="0" />
+                  <xs:element name="DATADEVOLUCAO" msdata:Caption="Data de Devolução" msprop:_x0024_Visible="True" type="xs:dateTime" minOccurs="0" />
+                  <xs:element name="DURABILIDADE" msprop:_x0024_Visible="False" msprop:_x0024_ControlVisible="False" type="xs:int" minOccurs="0" />
+                  <xs:element name="DURABILIDADERISCO" msprop:_x0024_Visible="False" msprop:_x0024_ControlVisible="False" type="xs:int" minOccurs="0" />
+                  <xs:element name="DATA" type="xs:dateTime" minOccurs="0" />
+                  <xs:element name="EFICAZ" type="xs:string" minOccurs="0" />
+                  <xs:element name="DESTINO" type="xs:string" minOccurs="0" />
+                  <xs:element name="DATACONSIDERA" type="xs:string" minOccurs="0" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="VLOTEEPI" msprop:_x0024_Modified="False" msprop:_x0024_Caption="Lote" msprop:_x0024_Id="CODCOLIGADA;IDLOTE">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="CODCOLIGADA" msdata:Caption="Código da coligada" msprop:_x0024_Visible="False" msprop:_x0024_AllowFilter="False" type="xs:int" />
+                  <xs:element name="CODEPI" msdata:Caption="Cód. EPI" msprop:_x0024_Visible="True" msprop:_x0024_AllowFilter="True" type="xs:string" />
+                  <xs:element name="IDLOTE" msdata:Caption="Id. Lote" msprop:_x0024_Visible="True" msprop:_x0024_AllowFilter="True" type="xs:decimal" />
+                  <xs:element name="CA" msprop:_x0024_Visible="True" msprop:_x0024_AllowFilter="True" type="xs:string" minOccurs="0" />
+                  <xs:element name="NOME" msdata:Caption="Nome" msprop:_x0024_Visible="True" msprop:_x0024_AllowFilter="True" type="xs:string" minOccurs="0" />
+                  <xs:element name="CODSECAO" msdata:Caption="Cód. Seção" msprop:_x0024_Visible="True" msprop:_x0024_AllowFilter="True" type="xs:string" minOccurs="0" />
+                  <xs:element name="CODFILIAL" msdata:Caption="Código da Filial" msprop:_x0024_Visible="True" msprop:_x0024_AllowFilter="True" type="xs:short" minOccurs="0" />
+                  <xs:element name="DTAQUISICAO" msdata:Caption="Data de Aquisição" msdata:DateTimeMode="Unspecified" msprop:_x0024_Visible="True" msprop:_x0024_AllowFilter="True" type="xs:dateTime" minOccurs="0" />
+                  <xs:element name="QUANTIDADE" msdata:Caption="Quantidade" type="xs:int" default="1" minOccurs="0" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:complexType>
+        <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+          <xs:field xpath="CODCOLIGADA" />
+          <xs:field xpath="CODEPI" />
+          <xs:field xpath="IDLOTE" />
+          <xs:selector xpath=".//VLOTEEPI" />
+        </xs:unique>
+      </xs:element>
+    </xs:schema>
+    <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+      <NewDataSet xmlns="">
+        <EPISFORM diffgr:id="EPISFORM1" msdata:rowOrder="0" diffgr:hasChanges="inserted">
+          <CA></CA>
+          <CHAPA>00005</CHAPA>
+          <CODCOLIGADA>5</CODCOLIGADA>
+          <CODEPI>1000</CODEPI>
+          <CODIGO>4</CODIGO>
+          <DATA>2025-07-14T10:56:30-03:00</DATA>
+          <DATACONSIDERA>1</DATACONSIDERA>
+          <DATAEMPRESTIMO>2025-07-14T10:56:30-03:00</DATAEMPRESTIMO>
+          <DESTINO>2</DESTINO>
+          <DETALHE>OK</DETALHE>
+          <EFICAZ>1</EFICAZ>
+          <EMPRESTADO>LAERCI PEREIRA</EMPRESTADO>
+          <EPIEMPRESTADO>0</EPIEMPRESTADO>
+          <IDLOTE>2</IDLOTE>
+          <NOME>Teste Descartavel</NOME>
+          <OPCAO>Fornecer</OPCAO>
+          <STATUS>2</STATUS>
+          <checkBox>false</checkBox>
+        </EPISFORM>
+        <EPISFORM diffgr:id="EPISFORM2" msdata:rowOrder="1" diffgr:hasChanges="inserted">
+          <CA></CA>
+          <CHAPA>00005</CHAPA>
+          <CODCOLIGADA>5</CODCOLIGADA>
+          <CODEPI>999</CODEPI>
+          <CODIGO>4</CODIGO>
+          <DATA>2025-07-14T10:56:30-03:00</DATA>
+          <DATACONSIDERA>1</DATACONSIDERA>
+          <DATAEMPRESTIMO>2025-07-14T10:56:30-03:00</DATAEMPRESTIMO>
+          <DESTINO>2</DESTINO>
+          <DETALHE>OK</DETALHE>
+          <EFICAZ>1</EFICAZ>
+          <EMPRESTADO>LAERCI PEREIRA</EMPRESTADO>
+          <EPIEMPRESTADO>0</EPIEMPRESTADO>
+          <IDLOTE>1</IDLOTE>
+          <NOME>Teste</NOME>
+          <OPCAO>Fornecer</OPCAO>
+          <STATUS>2</STATUS>
+          <checkBox>false</checkBox>
+        </EPISFORM>
+        <VLOTEEPI diffgr:id="VLOTEEPI1" msdata:rowOrder="0" diffgr:hasChanges="inserted">
+          <CA>456</CA>
+          <CODCOLIGADA>5</CODCOLIGADA>
+          <CODEPI>1000</CODEPI>
+          <IDLOTE>2</IDLOTE>
+          <NOME>Teste Descartavel</NOME>
+          <QUANTIDADE>1</QUANTIDADE>
+        </VLOTEEPI>
+        <VLOTEEPI diffgr:id="VLOTEEPI2" msdata:rowOrder="1" diffgr:hasChanges="inserted">
+          <CA>123</CA>
+          <CODCOLIGADA>5</CODCOLIGADA>
+          <CODEPI>999</CODEPI>
+          <IDLOTE>1</IDLOTE>
+          <NOME>Teste</NOME>
+          <QUANTIDADE>1</QUANTIDADE>
+        </VLOTEEPI>
+      </NewDataSet>
+    </diffgr:diffgram>
+  </Value>
+  <idDescarte>0</idDescarte>
+  <idDevolucao>0</idDevolucao>
+  <idEmprestimo>2</idEmprestimo>
+  <CodUsuario xmlns="http://www.totvs.com/">4dash</CodUsuario>
+  <Context xmlns:d2p1="http://www.totvs.com.br/RM/" z:Id="i2" xmlns="http://www.totvs.com/">
+    <d2p1:Environment>DotNet</d2p1:Environment>
+    <d2p1:_params xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$EXERCICIOFISCAL</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:int">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODLOCPRT</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:int">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODTIPOCURSO</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:int">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$EDUTIPOUSR</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODUNIDADEBIB</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:int">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODCOLIGADA</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:int">5</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$RHTIPOUSR</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODIGOEXTERNO</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODSISTEMA</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">V</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODUSUARIOSERVICO</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string"></d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODUSUARIO</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">4dash</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$IDPRJ</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:int">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CHAPAFUNCIONARIO</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+      <d3p1:KeyValueOfanyTypeanyType>
+        <d3p1:Key xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:string">$CODFILIAL</d3p1:Key>
+        <d3p1:Value xmlns:d5p1="http://www.w3.org/2001/XMLSchema" i:type="d5p1:int">-1</d3p1:Value>
+      </d3p1:KeyValueOfanyTypeanyType>
+    </d2p1:_params>
+  </Context>
+  <PrimaryKeyList xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns="http://www.totvs.com/" />
+  <PrimaryKeyNames xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" i:nil="true" xmlns="http://www.totvs.com/" />
+</SmtGenericParamsProcRelatorio>

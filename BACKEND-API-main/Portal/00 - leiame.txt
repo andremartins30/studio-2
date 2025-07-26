@@ -1,0 +1,11 @@
+-- Endpoints:
+Produção: 
+https://orlandohenrique182744.rm.cloudtotvs.com.br:8051/WsPageIndex
+ 
+-- wSDL:
+CONSULTA SQL: https://orlandohenrique182744.rm.cloudtotvs.com.br:8051/wsConsultaSQL/MEX?wsdl
+PROCESSOS: https://orlandohenrique182744.rm.cloudtotvs.com.br:8051/wsProcess/MEX?wsdl
+
+-- Credenciais:
+U:4dash
+S:4dash
